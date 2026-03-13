@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CouncilController;
 use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\Agent\AgentExplorerController;
 use App\Http\Controllers\Public\PublicCouncilController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,13 @@ Route::get('/documents/{document}/download', [PublicCouncilController::class, 'd
     ->name('public.documents.download');
 Route::get('/documents/{document}/view', [PublicCouncilController::class, 'view'])
     ->name('public.documents.view');
+
+Route::prefix('agent')
+    ->name('agent.')
+    // ->middleware(['auth', 'verified'])  // À décommenter pour restreindre l'accès aux agents authentifiés
+    ->group(function () {
+        Route::get('/', [AgentExplorerController::class, 'index'])->name('explorer');
+    });
 
 Route::middleware([
     'auth:sanctum',
