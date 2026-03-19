@@ -18,12 +18,13 @@ class DocumentController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|in:deliberation,proces_verbal,annexe',
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'file' => 'required|mimes:pdf',
             'parent_document_id' => 'nullable|exists:documents,id',
         ]);
 
         $validated['council_id'] = $council->id;
+        $validated['title'] ??= pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
         $this->handleDocumentUpload($validated, $request->file('file'));
 
         return back()->with('success', 'Document envoyé pour indexation.');
@@ -34,11 +35,12 @@ class DocumentController extends Controller
         $validated = $request->validate([
             'council_id' => 'required|exists:councils,id',
             'type' => 'required|in:deliberation,proces_verbal,annexe',
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'file' => 'required|mimes:pdf',
             'parent_document_id' => 'nullable|exists:documents,id',
         ]);
 
+        $validated['title'] ??= pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
         $this->handleDocumentUpload($validated, $request->file('file'));
 
         return redirect()

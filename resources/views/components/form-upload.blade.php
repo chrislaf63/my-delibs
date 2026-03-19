@@ -25,7 +25,7 @@
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
-            <input type="text" name="title" placeholder="Titre du document" required
+            <input type="text" name="title" id="{{ $uid }}_title" placeholder="Titre du document"
                    class="w-full border border-gray-300 rounded p-2 text-sm">
         </div>
     </div>
@@ -76,9 +76,10 @@
         parentRow.style.display = this.value === 'annexe' ? '' : 'none';
     });
 
-    const zone  = document.getElementById('{{ $uid }}_zone');
-    const input = document.getElementById('{{ $uid }}_input');
-    const label = document.getElementById('{{ $uid }}_label');
+    const zone       = document.getElementById('{{ $uid }}_zone');
+    const input      = document.getElementById('{{ $uid }}_input');
+    const label      = document.getElementById('{{ $uid }}_label');
+    const titleInput = document.getElementById('{{ $uid }}_title');
 
     function setFile(file) {
         if (!file || file.type !== 'application/pdf') return;
@@ -88,6 +89,9 @@
         label.innerHTML = '<span class="font-medium text-green-700">' + file.name + '</span>';
         zone.classList.remove('border-gray-300', 'hover:border-blue-400', 'hover:bg-blue-50');
         zone.classList.add('border-green-400', 'bg-green-50');
+        if (titleInput.value === '') {
+            titleInput.value = file.name.replace(/\.[^.]+$/, '');
+        }
     }
 
     input.addEventListener('change', function () {

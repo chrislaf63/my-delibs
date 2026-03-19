@@ -8,10 +8,19 @@
             </a>
         </div>
 
-        @if($councils->isEmpty())
+        @if($councilsByYear->isEmpty())
             <p class="text-gray-500">Aucune séance enregistrée.</p>
         @else
-            <div class="space-y-2">
+            <div class="space-y-4">
+                @foreach($councilsByYear as $year => $councils)
+                    <details class="rounded-lg border border-gray-200 shadow-sm" {{ $loop->first ? 'open' : '' }}>
+                        <summary class="flex items-center justify-between px-4 py-3 cursor-pointer list-none select-none bg-gray-100 rounded-lg">
+                            <span class="text-lg font-bold text-gray-700">{{ $year }}</span>
+                            <span class="text-sm text-gray-500">
+                                {{ $councils->count() }} séance{{ $councils->count() > 1 ? 's' : '' }}
+                            </span>
+                        </summary>
+                        <div class="space-y-2 p-3">
                 @foreach($councils as $council)
                     <details class="bg-white shadow rounded group">
                         <summary class="flex items-center justify-between p-4 cursor-pointer list-none select-none">
@@ -170,6 +179,9 @@
                             <x-form-upload :council="$council" />
                         </div>
 
+                    </details>
+                @endforeach
+                        </div>
                     </details>
                 @endforeach
             </div>
