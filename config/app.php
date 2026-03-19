@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |---------------------------------------------------------------------------
+    | Define admin password on installation
+    |---------------------------------------------------------------------------
+    */
+
+    'adminPassword' => env('APP_ADMIN_PASSWORD'),
 ];
