@@ -33,18 +33,23 @@
     @endif
 
     <!-- Page Content -->
-    <main>
+    <main class="max-w-7xl mx-auto px-6 py-8">
         {{ $slot }}
     </main>
 </div>
 
 @stack('modals')
 
-{{-- Toast de succès d'indexation --}}
+{{-- Toasts d'indexation --}}
 <div x-data="{ toasts: [] }"
      @document-indexed.window="
          let id = Date.now();
-         toasts.push({ id, title: $event.detail.title });
+         toasts.push({ id, title: $event.detail.title, type: 'success' });
+         setTimeout(() => toasts = toasts.filter(t => t.id !== id), 4000);
+     "
+     @document-failed.window="
+         let id = Date.now();
+         toasts.push({ id, title: $event.detail.title, type: 'error' });
          setTimeout(() => toasts = toasts.filter(t => t.id !== id), 4000);
      "
      class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
@@ -55,11 +60,19 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 translate-x-0"
              x-transition:leave-end="opacity-0 translate-x-4"
-             class="flex items-center gap-2 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-            <span>Indexation réussie : <strong x-text="toast.title"></strong></span>
+             :class="toast.type === 'success' ? 'bg-green-600' : 'bg-red-600'"
+             class="flex items-center gap-2 text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm">
+            <template x-if="toast.type === 'success'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </template>
+            <template x-if="toast.type === 'error'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </template>
+            <span x-text="toast.type === 'success' ? 'Indexation réussie : ' + toast.title : 'Échec de l\'indexation : ' + toast.title"></span>
         </div>
     </template>
 </div>

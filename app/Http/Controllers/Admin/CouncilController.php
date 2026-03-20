@@ -24,13 +24,15 @@ class CouncilController extends Controller
      */
     public function index()
     {
-        $councils = Council::with(['documents' => function ($query) {
+        $councilsByYear = Council::with(['documents' => function ($query) {
             $query->whereNull('parent_document_id')->orderBy('type')->orderBy('title');
         }, 'documents.annexes'])
-            ->orderByDesc('council_date')
-            ->get();
+            ->orderBy('council_date')
+            ->get()
+            ->groupBy(fn ($c) => $c->council_date->year)
+            ->sortKeysDesc();
 
-        return view('admin.councils.index', compact('councils'));
+        return view('admin.councils.index', compact('councilsByYear'));
     }
 
     /**

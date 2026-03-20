@@ -10,6 +10,13 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
+    public function index()
+    {
+        $users = User::orderBy('name')->get();
+
+        return view('admin.users.index', compact('users'));
+    }
+
     public function create()
     {
         return view('admin.users.create');
@@ -31,7 +38,19 @@ class UserController extends Controller
             'password'   => Hash::make($request->password),
         ]);
 
-        return redirect()->route('admin.dashadmin')
+        return redirect()->route('admin.users.index')
             ->with('status', 'Utilisateur créé avec succès.');
+    }
+
+    public function destroy(User $user)
+    {
+        if (User::count() <= 1) {
+            return back()->with('error', 'Impossible de supprimer le dernier utilisateur.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')
+            ->with('status', 'Utilisateur supprimé.');
     }
 }

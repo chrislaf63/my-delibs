@@ -39,8 +39,10 @@ Route::middleware(['auth', 'verified'])
             ->name('dashboard.councils.store');
         Route::post('/dashboard/documents', [DocumentController::class, 'storeFromDashboard'])
             ->name('dashboard.documents.store');
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
         Route::get('users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('users', [UserController::class, 'store'])->name('users.store');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::resource('councils', CouncilController::class)->only(['index', 'store', 'show', 'destroy']);
         Route::post('councils/{council}/documents',
             [DocumentController::class, 'store']
