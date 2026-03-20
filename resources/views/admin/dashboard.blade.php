@@ -19,48 +19,23 @@
             </form>
         </div>
         <div class="bg-white p-6 shadow rounded">
-            <h2 class="text-lg font-semibold mb-4">Ajouter un document</h2>
+            <h2 class="text-lg font-semibold mb-4">Derniers documents indexés</h2>
 
-            <form method="POST"
-                  action="{{ route('admin.dashboard.documents.store') }}"
-                  enctype="multipart/form-data">
-
-                @csrf
-
-                <select name="council_id"
-                        class="w-full border p-2 mb-3"
-                        required>
-                    <option value="">Sélectionner une séance</option>
-                    @foreach($councils as $council)
-                        <option value="{{ $council->id }}">
-                            Séance du {{ $council->council_date->format('d/m/Y') }}
-                        </option>
-                    @endforeach
-                </select>
-
-                <select name="type"
-                        class="w-full border p-2 mb-3"
-                        required>
-                    <option value="deliberation">Délibération</option>
-                    <option value="proces_verbal">Procès-verbal</option>
-                </select>
-
-                <input type="text"
-                       name="title"
-                       placeholder="Titre"
-                       class="w-full border p-2 mb-3"
-                       required>
-
-                <input type="file"
-                       name="file"
-                       accept="application/pdf"
-                       class="w-full mb-3"
-                       required>
-
-                <button class="bg-green-600 text-white px-4 py-2 rounded hover:opacity-50">
-                    Ajouter
-                </button>
-            </form>
+            @forelse($recentIndexedDocuments as $doc)
+                <div class="py-2 border-b last:border-0">
+                    <p class="font-medium text-sm truncate">{{ $doc->title }}</p>
+                    <p class="text-xs text-gray-500">
+                        Séance du {{ $doc->council->council_date->format('d/m/Y') }}
+                        &bull; {{ $doc->type === 'deliberation' ? 'Délibération' : 'Procès-verbal' }}
+                        &bull; indexé le {{ $doc->indexed_at->format('d/m/Y') }}
+                        @if($doc->uploader)
+                            &bull; par {{ trim($doc->uploader->first_name . ' ' . $doc->uploader->name) }}
+                        @endif
+                    </p>
+                </div>
+            @empty
+                <p class="text-sm text-gray-400">Aucun document indexé.</p>
+            @endforelse
         </div>
     </div>
 
@@ -146,27 +121,4 @@
         @endforeach
     </div>
 
-    <!-- Derniers documents -->
-    <h2 class="text-xl font-semibold mb-3">Derniers documents</h2>
-
-    <div class="bg-white shadow rounded">
-        @foreach($recentDocuments as $doc)
-            <div class="p-4 border-b">
-                <p class="font-medium">{{ $doc->title }}</p>
-                <p class="text-sm text-gray-500">
-                    Séance du {{ $doc->council->council_date->format('d/m/Y') }}
-                    • {{ $doc->type }}
-                </p>
-                @if($doc->status === 'failed')
-                    <form method="POST"
-                          action="{{ route('admin.documents.reindex', $doc) }}">
-                        @csrf
-                        <button class="text-orange-600">
-                            Relancer indexation
-                        </button>
-                    </form>
-                @endif
-            </div>
-        @endforeach
-    </div>
 </x-app-layout>

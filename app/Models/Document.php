@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
+    protected $casts = [
+        'indexed_at' => 'datetime',
+    ];
+
     protected $fillable = [
         'council_id',
+        'uploaded_by',
         'parent_document_id',
         'type',
         'title',
@@ -23,6 +28,11 @@ class Document extends Model
     public function council()
     {
         return $this->belongsTo(Council::class);
+    }
+
+    public function uploader()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'uploaded_by');
     }
 
     public function parent()

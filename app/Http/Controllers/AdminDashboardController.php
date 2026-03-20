@@ -29,12 +29,11 @@ class AdminDashboardController extends Controller
         $totalDeliberations = Document::where('type', 'deliberation')->count();
         $totalProcesVerbaux = Document::where('type', 'proces_verbal')->count();
 
-        $recentCouncils  = Council::latest('council_date')->take(5)->get();
-        $recentDocuments = Document::with('council')->latest()->take(5)->get();
-        $councils        = Council::latest('council_date')->get();
+        $recentCouncils         = Council::latest('council_date')->take(5)->get();
+        $recentIndexedDocuments = Document::with('council', 'uploader')->where('status', 'indexed')->latest('indexed_at')->take(5)->get();
 
         return view('admin.dashboard', array_merge(
-            compact('totalCouncils', 'totalDocuments', 'totalDeliberations', 'totalProcesVerbaux', 'recentCouncils', 'recentDocuments', 'councils'),
+            compact('totalCouncils', 'totalDocuments', 'totalDeliberations', 'totalProcesVerbaux', 'recentCouncils', 'recentIndexedDocuments'),
             $this->indexationCounts()
         ));
     }

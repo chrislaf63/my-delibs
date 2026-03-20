@@ -75,6 +75,7 @@ class DocumentController extends Controller
 
         $document = Document::create([
             'council_id'         => $data['council_id'],
+            'uploaded_by'        => auth()->id(),
             'parent_document_id' => $data['parent_document_id'] ?? null,
             'type'               => $data['type'],
             'title'              => $data['title'],
