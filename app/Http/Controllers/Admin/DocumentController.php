@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class DocumentController extends Controller
@@ -64,9 +65,33 @@ class DocumentController extends Controller
         return back()->with('success', 'Indexation relancée.');
     }
 
+    private function buildStoragePath(\Illuminate\Http\UploadedFile $file): string
+    {
+        $nameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slug = Str::slug($nameWithoutExt) ?: 'document';
+
+        // Sécurité : s'assurer qu'il n'y a pas de traversée de chemin
+        if ($slug !== basename($slug)) {
+            $slug = 'document';
+        }
+
+        $filename = $slug . '.pdf';
+        $path = 'documents/' . $filename;
+
+        $counter = 1;
+        while (Storage::exists($path)) {
+            $filename = $slug . '-' . $counter . '.pdf';
+            $path = 'documents/' . $filename;
+            $counter++;
+        }
+
+        return $path;
+    }
+
     private function handleDocumentUpload(array $data, $file): void
     {
-        $path = $file->store('documents');
+        $storagePath = $this->buildStoragePath($file);
+        $path = $file->storeAs(dirname($storagePath), basename($storagePath));
         $absolutePath = storage_path('app/private/' . $path);
 
         $this->compressPdf($absolutePath);
