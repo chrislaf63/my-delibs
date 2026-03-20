@@ -15,13 +15,13 @@
                     <x-nav-link href="{{ route('admin.dashadmin') }}" :active="request()->routeIs('admin.dashadmin')">
                         {{ __('Tableau de bord') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('admin.users.create') }}"
-                                :active="request()->routeIs('admin.users.create')">
-                        Créer un utilisateur
+                    <x-nav-link href="{{ route('admin.users.index') }}"
+                                :active="request()->routeIs('admin.users.*')">
+                        Gestion des utilisateurs
                     </x-nav-link>
                     <x-nav-link href="{{ route('admin.councils.index') }}"
                                 :active="request()->routeIs('admin.councils.index')">
-                        Voir toutes les séances
+                        Gestion des documents
                     </x-nav-link>
                 </div>
             </div>
@@ -163,9 +163,9 @@
                                    :active="request()->routeIs('admin.dashadmin')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.users.create') }}"
-                                   :active="request()->routeIs('admin.users.create')">
-                Créer un utilisateur
+            <x-responsive-nav-link href="{{ route('admin.users.index') }}"
+                                   :active="request()->routeIs('admin.users.*')">
+                Gestion des utilisateurs
             </x-responsive-nav-link>
         </div>
 

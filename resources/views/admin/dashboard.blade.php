@@ -40,7 +40,7 @@
     </div>
 
     <!-- Cartes statistiques -->
-    <div class="grid grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-5 gap-6 mb-10">
 
         <div class="bg-white p-6 shadow rounded">
             <p class="text-sm text-gray-500">Séances</p>
@@ -53,13 +53,18 @@
         </div>
 
         <div class="bg-white p-6 shadow rounded">
+            <p class="text-sm text-gray-500">Procès-verbaux</p>
+            <p class="text-3xl font-bold">{{ $totalProcesVerbaux }}</p>
+        </div>
+
+        <div class="bg-white p-6 shadow rounded">
             <p class="text-sm text-gray-500">Délibérations</p>
             <p class="text-3xl font-bold">{{ $totalDeliberations }}</p>
         </div>
 
         <div class="bg-white p-6 shadow rounded">
-            <p class="text-sm text-gray-500">Procès-verbaux</p>
-            <p class="text-3xl font-bold">{{ $totalProcesVerbaux }}</p>
+            <p class="text-sm text-gray-500">Annexes</p>
+            <p class="text-3xl font-bold">{{ $totalAnnexes }}</p>
         </div>
 
     </div>
