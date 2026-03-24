@@ -5,31 +5,104 @@
 
     {{-- Formulaire de recherche --}}
     <form method="GET" action="{{ route('search.index') }}"
-          class="bg-white rounded-xl shadow-sm p-5 mb-8 flex flex-col sm:flex-row gap-3">
-        <input type="text"
-               name="q"
-               value="{{ $q }}"
-               placeholder="Rechercher un mot-clé..."
-               class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+          class="bg-white rounded-xl shadow-sm p-5 mb-8 flex flex-col gap-3">
 
-        <select name="type"
-                class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-            <option value="">Tous les types</option>
-            <option value="deliberation" @selected($type === 'deliberation')>Délibérations</option>
-            <option value="proces_verbal" @selected($type === 'proces_verbal')>Procès-verbaux</option>
-        </select>
+        {{-- Barre principale --}}
+        <div class="flex flex-col sm:flex-row gap-3">
+            <input type="text"
+                   name="q"
+                   value="{{ $q }}"
+                   placeholder="Rechercher un mot-clé..."
+                   class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
 
-        <button type="submit"
-                class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-            </svg>
-            Rechercher
-        </button>
+            <select name="type"
+                    class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                <option value="">Tous les types</option>
+                <option value="deliberation" @selected($type === 'deliberation')>Délibérations</option>
+                <option value="proces_verbal" @selected($type === 'proces_verbal')>Procès-verbaux</option>
+            </select>
+
+            <button type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+                </svg>
+                Rechercher
+            </button>
+        </div>
+
+        {{-- Filtres avancés --}}
+        @php
+            $hasAdvancedFilters = $dateFrom || $dateTo || $councilId || $documentId;
+        @endphp
+        <details class="group border-t border-gray-100 pt-3" @if($hasAdvancedFilters) open @endif>
+            <summary class="flex cursor-pointer items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-700 select-none list-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                Filtres avancés
+            </summary>
+
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4"
+                 x-data="{ selectedCouncil: '{{ $councilId ?? '' }}', allDocs: {{ $allDocuments->toJson() }} }">
+
+                {{-- Filtre par période --}}
+                <div class="sm:col-span-2">
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Période</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-500 mb-1">Du</label>
+                            <input type="date" name="date_from" value="{{ $dateFrom }}"
+                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-500 mb-1">Au</label>
+                            <input type="date" name="date_to" value="{{ $dateTo }}"
+                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Filtre par séance --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Séance</label>
+                    <select name="council_id" x-model="selectedCouncil"
+                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <option value="">Toutes les séances</option>
+                        @foreach ($councils as $council)
+                            <option value="{{ $council->id }}" @selected($councilId == $council->id)>
+                                Séance du {{ $council->council_date->translatedFormat('d F Y') }}
+                                @if ($council->reference) — {{ $council->reference }} @endif
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Filtre par document --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Document</label>
+                    <select name="document_id"
+                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <option value="">Tous les documents</option>
+                        <template x-for="doc in allDocs.filter(d => selectedCouncil === '' || String(d.council_id) === String(selectedCouncil))" :key="doc.id">
+                            <option :value="doc.id" :selected="doc.id == {{ $documentId ?? 'null' }}" x-text="doc.title"></option>
+                        </template>
+                    </select>
+                </div>
+
+                {{-- Réinitialiser --}}
+                <div class="sm:col-span-2">
+                    <a href="{{ route('search.index') }}{{ $q ? '?q='.urlencode($q) : '' }}"
+                       class="text-sm text-gray-400 hover:text-gray-600 transition">
+                        ← Réinitialiser les filtres
+                    </a>
+                </div>
+            </div>
+        </details>
     </form>
 
     {{-- Résultats --}}
-    @if ($q || $type)
+    @if ($hasFilters)
         @if ($documents->isEmpty())
             <p class="text-center text-gray-500 py-10">
                 Aucun document ne correspond à votre recherche.
@@ -96,7 +169,7 @@
         @endif
     @else
         <p class="text-center text-gray-400 py-10">
-            Saisissez un mot-clé pour lancer la recherche.
+            Utilisez la barre de recherche ou les filtres pour trouver des documents.
         </p>
     @endif
 </x-layouts.public>
