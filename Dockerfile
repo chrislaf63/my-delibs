@@ -40,7 +40,7 @@ COPY . .
 # Entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY entrypoint-queue.sh /usr/local/bin/entrypoint-queue.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint-queue.sh
 
 EXPOSE 9000
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

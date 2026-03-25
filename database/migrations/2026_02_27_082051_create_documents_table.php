@@ -37,7 +37,6 @@ return new class extends Migration
         });
 
         // FULLTEXT index
-        DB::statement('ALTER TABLE documents DROP INDEX fulltext_content');
         DB::statement('ALTER TABLE documents ADD FULLTEXT fulltext_content (title, content)');
     }
 
