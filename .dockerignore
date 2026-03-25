@@ -1,0 +1,29 @@
+# Dépendances (reconstruites par Composer dans l'image)
+/vendor/
+/node_modules/
+
+# Environnement (ne doit jamais être embarqué dans l'image)
+.env
+.env.*
+
+# Cache et fichiers générés
+/bootstrap/cache/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/
+
+# Git
+.git/
+.gitignore
+
+# Docker lui-même (pas besoin dans l'image)
+Dockerfile
+docker-compose.yml
+docker/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store

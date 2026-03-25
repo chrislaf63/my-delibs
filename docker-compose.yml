@@ -1,0 +1,80 @@
+services:
+
+    # ─── Nginx : point d'entrée HTTP ──────────────────────────────────────────────
+
+    nginx:
+        image: nginx:alpine
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www/html:ro
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+        depends_on:
+            - app
+
+    # ─── App : PHP-FPM + Laravel + Tesseract + Poppler + Ghostscript ──────────────
+
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www/html
+            - storage_data:/var/www/html/storage
+        environment:
+            APP_ENV: local
+            APP_KEY: ${APP_KEY}
+            DB_HOST: db
+            DB_PORT: 3306
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+        depends_on:
+            db:
+                condition: service_healthy
+
+    # ─── Queue : worker Laravel pour les jobs OCR asynchrones ─────────────────────
+
+    queue:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        entrypoint: ["/usr/local/bin/entrypoint-queue.sh"]
+        restart: on-failure
+        volumes:
+            - .:/var/www/html
+            - storage_data:/var/www/html/storage
+        environment:
+            APP_ENV: local
+            APP_KEY: ${APP_KEY}
+            DB_HOST: db
+            DB_PORT: "3306"
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+        depends_on:
+            db:
+                condition: service_healthy
+
+    # ─── MySQL ────────────────────────────────────────────────────────────────────
+
+    db:
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - mysql_data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    # ─── Volumes persistants ────────────────────────────────────────────────────────
+
+volumes:
+    mysql_data:
+    storage_data:
