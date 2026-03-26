@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Council;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,13 +11,40 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $q = $request->input('q');
-        $type = $request->input('type');
+        $request->validate([
+            'q'           => 'nullable|string|max:255',
+            'type'        => 'nullable|in:deliberation,proces_verbal',
+            'date_from'   => 'nullable|date',
+            'date_to'     => 'nullable|date',
+            'council_id'  => 'nullable|integer|exists:councils,id',
+            'document_id' => 'nullable|integer|exists:documents,id',
+        ]);
+
+        $q          = $request->input('q');
+        $type       = $request->input('type');
+        $dateFrom   = $request->input('date_from');
+        $dateTo     = $request->input('date_to');
+        $councilId  = $request->input('council_id');
+        $documentId = $request->input('document_id');
+
+        $hasFilters = (bool) ($q || $type || $dateFrom || $dateTo || $councilId || $documentId);
 
         $documents = Document::query()
             ->where('status', 'indexed')
-            ->when($type, fn ($query) =>
-            $query->where('type', $type)
+            ->when($type, fn ($query) => $query->where(function ($q) use ($type) {
+                $q->where('type', $type)
+                    ->orWhere(function ($q2) use ($type) {
+                        $q2->where('type', 'annexe')
+                            ->whereHas('parent', fn ($p) => $p->where('type', $type));
+                    });
+            }))
+            ->when($documentId, fn ($query) => $query->where('id', $documentId))
+            ->when($councilId, fn ($query) => $query->where('council_id', $councilId))
+            ->when($dateFrom, fn ($query) =>
+                $query->whereHas('council', fn ($q2) => $q2->where('council_date', '>=', $dateFrom))
+            )
+            ->when($dateTo, fn ($query) =>
+                $query->whereHas('council', fn ($q2) => $q2->where('council_date', '<=', $dateTo))
             )
             ->when($q, function ($query) use ($q) {
                 if (DB::getDriverName() === 'sqlite') {
@@ -31,6 +59,7 @@ class SearchController extends Controller
                         ->orderByDesc('relevance');
                 }
             })
+            ->when(! $q, fn ($query) => $query->orderByDesc('created_at'))
             ->with('council')
             ->paginate(15)
             ->withQueryString();
@@ -47,7 +76,17 @@ class SearchController extends Controller
             }
         }
 
-        return view('public.search', compact('documents', 'q', 'type', 'highlightedTitles', 'contentSnippets'));
+        $councils     = Council::orderByDesc('council_date')->get();
+        $allDocuments = Document::where('status', 'indexed')
+            ->orderBy('title')
+            ->select('id', 'title', 'council_id')
+            ->get();
+
+        return view('public.search', compact(
+            'documents', 'q', 'type', 'highlightedTitles', 'contentSnippets',
+            'hasFilters', 'dateFrom', 'dateTo',
+            'councilId', 'documentId', 'councils', 'allDocuments'
+        ));
     }
 
     /**
@@ -99,7 +138,7 @@ class SearchController extends Controller
      *
      * @return string[]
      */
-    private function extractSnippets(string $content, string $query, int $max = 3): array
+    private function extractSnippets(string $content, string $query, int $max = 9): array
     {
         $foldedContent = $this->fold($content);
         $foldedQuery   = $this->fold($query);
