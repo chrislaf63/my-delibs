@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('councils', function (Blueprint $table) {
             $table->id();
             $table->date('council_date')->index();
-            $table->string('reference')->nullable();
             $table->timestamps();
         });
     }

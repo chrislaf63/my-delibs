@@ -16,9 +16,18 @@ return new class extends Migration
             $table->foreignId('council_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('uploaded_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('parent_document_id')
+                ->nullable()
+                ->constrained('documents')
+                ->cascadeOnDelete();
             $table->enum('type', [
                 'deliberation',
-                'proces_verbal'
+                'proces_verbal',
+                'annexe',
             ])->index();
             $table->string('title');
             $table->string('file_path');
