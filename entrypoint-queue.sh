@@ -20,5 +20,8 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-scrip
 echo "Découverte des packages Laravel..."
 php artisan package:discover --ansi
 
+echo "Attente que les migrations soient prêtes..."
+php artisan migrate:status --no-interaction || sleep 5
+
 echo "Démarrage du worker..."
 exec php artisan queue:work --sleep=3 --tries=3
