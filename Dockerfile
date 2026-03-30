@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 		libjpeg-dev \
 		libzip-dev \
 		libonig-dev \
+        libicu-dev \
 		git \
 		unzip \
 		curl \
@@ -28,7 +29,8 @@ RUN docker-php-ext-install \
 		zip \
 		gd \
 		mbstring \
-		opcache
+		opcache \
+        intl
 
 # ─── Composer ──────────────────────────────────────────────────────────────────
 # On copie Composer depuis son image officielle plutôt que de l'installer manuellement
