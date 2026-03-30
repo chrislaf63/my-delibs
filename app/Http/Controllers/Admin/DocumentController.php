@@ -13,8 +13,25 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
+/**
+ * Contrôleur des documents (espace admin).
+ *
+ * Gère l'upload, la suppression et la ré-indexation des documents PDF
+ * (délibérations, procès-verbaux, annexes) attachés à une séance (`Council`).
+ * Chaque upload déclenche la compression Ghostscript puis le job OCR asynchrone.
+ *
+ * Routes exposées : store, destroy, reindex.
+ */
 class DocumentController extends Controller
 {
+    /**
+     * Enregistre un document uploadé depuis la page de détail d'une séance.
+     *
+     * Valide le fichier PDF, construit un chemin de stockage unique,
+     * compresse le PDF si activé, crée l'entrée en base et dispatch le job OCR.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, Council $council)
     {
         $validated = $request->validate([
@@ -31,24 +48,12 @@ class DocumentController extends Controller
         return back()->with('success', 'Document envoyé pour indexation.');
     }
 
-    public function storeFromDashboard(Request $request)
-    {
-        $validated = $request->validate([
-            'council_id' => 'required|exists:councils,id',
-            'type' => 'required|in:deliberation,proces_verbal,annexe',
-            'title' => 'nullable|string|max:255',
-            'file' => 'required|mimes:pdf',
-            'parent_document_id' => 'nullable|exists:documents,id',
-        ]);
 
-        $validated['title'] ??= pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
-        $this->handleDocumentUpload($validated, $request->file('file'));
-
-        return redirect()
-            ->route('admin.dashadmin')
-            ->with('success', 'Document ajouté.');
-    }
-
+    /**
+     * Supprime un document : retire le fichier du stockage et l'entrée en base.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Document $document)
     {
         Storage::delete($document->file_path);
@@ -58,6 +63,13 @@ class DocumentController extends Controller
         return back()->with('success', 'Document supprimé.');
     }
 
+    /**
+     * Remet le document en file d'attente pour une nouvelle indexation OCR.
+     *
+     * Repasse le statut à `pending` et re-dispatche le job `ProcessDocumentOCR`.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function reindex(Document $document)
     {
         $document->update(['status' => 'pending']);
@@ -67,6 +79,12 @@ class DocumentController extends Controller
         return back()->with('success', 'Indexation relancée.');
     }
 
+    /**
+     * Calcule un chemin de stockage unique pour le fichier uploadé.
+     *
+     * Slugifie le nom d'origine et incrémente un compteur suffixé (`-1`, `-2`…)
+     * si le fichier existe déjà dans `documents/`.
+     */
     private function buildStoragePath(\Illuminate\Http\UploadedFile $file): string
     {
         $nameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -90,6 +108,15 @@ class DocumentController extends Controller
         return $path;
     }
 
+    /**
+     * Orchestre l'upload complet d'un document.
+     *
+     * Stocke le fichier, compresse le PDF, crée l'entrée `Document` en base
+     * (statut `pending`) et dispatch le job OCR.
+     *
+     * @param  array  $data  Champs validés (council_id, type, title, parent_document_id…)
+     * @param  \Illuminate\Http\UploadedFile  $file
+     */
     private function handleDocumentUpload(array $data, $file): void
     {
         $storagePath = $this->buildStoragePath($file);
@@ -114,6 +141,15 @@ class DocumentController extends Controller
         ProcessDocumentOCR::dispatch($document);
     }
 
+    /**
+     * Compresse un PDF via Ghostscript si la compression est activée en config.
+     *
+     * Remplace le fichier original uniquement si le fichier compressé est plus léger.
+     * En cas d'absence de `gs` ou d'échec, un avertissement est loggé et le fichier
+     * original est conservé intact.
+     *
+     * @param  string  $absolutePath  Chemin absolu vers le fichier PDF à compresser.
+     */
     private function compressPdf(string $absolutePath): void
     {
         if (! config('pdf.compress_enabled')) {

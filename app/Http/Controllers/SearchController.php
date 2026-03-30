@@ -7,8 +7,26 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Contrôleur de recherche plein-texte publique.
+ *
+ * Permet de rechercher dans le contenu OCR des documents indexés avec des filtres
+ * combinables (texte libre, type, plage de dates, séance, document précis).
+ * Sur MySQL, utilise `MATCH … AGAINST` en mode booléen avec score de pertinence.
+ * Sur SQLite (dev), repli sur un `LIKE` basique.
+ *
+ * Routes exposées : index.
+ */
 class SearchController extends Controller
 {
+    /**
+     * Affiche la page de recherche et ses résultats paginés.
+     *
+     * Valide les filtres, construit la requête Eloquent, extrait les snippets
+     * et titres surlignés pour chaque résultat, puis passe tout à la vue.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $request->validate([

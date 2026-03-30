@@ -45,8 +45,6 @@ Route::middleware(['auth', 'verified'])
             ->name('documents.reindex');
         Route::post('/dashboard/councils', [CouncilController::class, 'store'])
             ->name('dashboard.councils.store');
-        Route::post('/dashboard/documents', [DocumentController::class, 'storeFromDashboard'])
-            ->name('dashboard.documents.store');
         Route::get('users', [UserController::class, 'index'])->name('users.index');
         Route::get('users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('users', [UserController::class, 'store'])->name('users.store');
