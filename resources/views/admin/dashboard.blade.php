@@ -11,7 +11,7 @@
                 @csrf
 
                 <input type="date" name="council_date"
-                       class="w-full border p-2 mb-3" required>
+                       class="w-full border p-2 mb-3 " required>
 
                 <button class="bg-ccpl-blue text-white px-4 py-2 rounded hover:opacity-70 transition">
                     Créer

@@ -33,11 +33,7 @@ class ProcessDocumentOCR implements ShouldQueue
 
             $filePath = storage_path('app/private/' . $this->document->file_path);
 
-            $text = $this->extractWithTika($filePath);
-
-            if (empty(trim($text))) {
-                $text = $this->extractWithTesseract($filePath);
-            }
+            $text = $this->extractWithTesseract($filePath);
 
             $cleanText = preg_replace('/\s+/', ' ', $text);
 
@@ -61,13 +57,6 @@ class ProcessDocumentOCR implements ShouldQueue
                 'error' => $e->getMessage()
             ]);
         }
-    }
-
-    protected function extractWithTika($filePath): string
-    {
-        // Appel HTTP vers serveur Tika
-        // (à implémenter)
-        return '';
     }
 
     protected function extractWithTesseract(string $filePath): string

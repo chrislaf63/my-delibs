@@ -41,7 +41,7 @@ return new class extends Migration
                 'indexed',
                 'failed',
             ])->default('pending')->index();
-            $table->timestamp(('indexed_at'))->nullable();
+            $table->timestamp('indexed_at')->nullable();
             $table->timestamps();
         });
 
