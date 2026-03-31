@@ -21,7 +21,7 @@
 <body class="font-sans antialiased">
 <x-banner/>
 
-<div class="min-h-screen bg-gray-100">
+<div class="min-h-screen bg-gray-100 flex flex-col">
     @livewire('navigation-menu')
 
     <!-- Page Heading -->
@@ -34,9 +34,14 @@
     @endif
 
     <!-- Page Content -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
+    <main class="max-w-7xl mx-auto px-6 py-8 w-full flex-grow">
         {{ $slot }}
     </main>
+    <footer class="mt-auto border-t border-gray-200 bg-white">
+        <div class="max-w-5xl mx-auto py-6 px-4 text-center text-sm text-gray-400">
+            &copy; {{ date('Y') }} {{ config('app.name', 'My Délibs') .' Communauté de Communes Plaine Limagne' }}
+        </div>
+    </footer>
 </div>
 
 @stack('modals')

@@ -3,7 +3,7 @@
 
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold">Liste des séances</h1>
-            <a href="{{ route('admin.dashadmin') }}" class="text-sm text-blue-600 hover:underline">
+            <a href="{{ route('admin.dashadmin') }}" class="text-sm text-ccpl-blue hover:underline">
                 ← Tableau de bord
             </a>
         </div>

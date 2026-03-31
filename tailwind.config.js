@@ -16,6 +16,16 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                ccpl: {
+                    blue: '#007e95',
+                    brown: '#7d6d6f',
+                    orange: '#ef7918',
+                    'light-green': '#d5d900',
+                    green: '#3fa535',
+                    'strong-green': '#00765b'
+                }
+            }
         },
     },
 

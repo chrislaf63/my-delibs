@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 
 // Routes publiques
 Route::get('/', [PublicCouncilController::class, 'index'])->name('public.council.index');
-Route::get('/seances/{council}', [PublicCouncilController::class, 'show'])->name('public.councils.show');
 Route::get('/recherche', [SearchController::class, 'index'])->name('search.index');
 Route::get('/documents/{document}/download', [PublicCouncilController::class, 'download'])->name('public.documents.download');
 Route::get('/documents/{document}/view', [PublicCouncilController::class, 'view'])->name('public.documents.view');

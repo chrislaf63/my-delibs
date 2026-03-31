@@ -49,25 +49,6 @@ class PublicCouncilController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show(Council $council)
-    {
-        $documents = $council->documents()
-            ->published()
-            ->orderBy('type')
-            ->get();
-
-        $deliberations = $council->documents()->published()
-            ->where('type', 'deliberation')
-            ->with(['annexes' => fn ($q) => $q->published()])
-            ->get();
-
-        $procesVerbaux = $council->documents()->published()
-            ->where('type', 'proces_verbal')
-            ->get();
-
-        return view('public.councils.show', compact('council', 'documents', 'procesVerbaux', 'deliberations'));
-    }
-
     /**
      * Déclenche le téléchargement du PDF d'un document.
      *

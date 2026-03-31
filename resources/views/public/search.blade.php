@@ -13,17 +13,17 @@
                    name="q"
                    value="{{ $q }}"
                    placeholder="Rechercher un mot-clé..."
-                   class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+                   class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-ccpl-blue focus:ring-ccpl-blue text-sm" />
 
             <select name="type"
-                    class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                    class="rounded-lg border-gray-300 shadow-sm focus:border-ccpl-blue focus:ring-ccpl-blue text-sm">
                 <option value="">Tous les types</option>
                 <option value="deliberation" @selected($type === 'deliberation')>Délibérations</option>
                 <option value="proces_verbal" @selected($type === 'proces_verbal')>Procès-verbaux</option>
             </select>
 
             <button type="submit"
-                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-ccpl-blue opacity-80 px-5 py-2 text-sm font-semibold text-white hover:opacity-100 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
                 </svg>
@@ -36,7 +36,7 @@
             $hasAdvancedFilters = $dateFrom || $dateTo || $councilId || $documentId;
         @endphp
         <details class="group border-t border-gray-100 pt-3" @if($hasAdvancedFilters) open @endif>
-            <summary class="flex cursor-pointer items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-700 select-none list-none">
+            <summary class="flex cursor-pointer items-center gap-1 text-sm font-medium text-ccpl-brown hover:text-gray-700 select-none list-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -48,26 +48,26 @@
 
                 {{-- Filtre par période --}}
                 <div class="sm:col-span-2">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Période</p>
+                    <p class="text-xs font-medium text-ccpl-brown uppercase tracking-wide mb-2">Période</p>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <div class="flex-1">
-                            <label class="block text-xs text-gray-500 mb-1">Du</label>
+                            <label class="block text-xs text-ccpl-brown mb-1">Du</label>
                             <input type="date" name="date_from" value="{{ $dateFrom }}"
-                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-ccpl-blue focus:ring-ccpl-blue text-sm" />
                         </div>
                         <div class="flex-1">
-                            <label class="block text-xs text-gray-500 mb-1">Au</label>
+                            <label class="block text-xs text-ccpl-brown mb-1">Au</label>
                             <input type="date" name="date_to" value="{{ $dateTo }}"
-                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+                                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-ccpl-blue focus:ring-ccpl-blue text-sm" />
                         </div>
                     </div>
                 </div>
 
                 {{-- Filtre par séance --}}
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Séance</label>
+                    <label class="block text-xs font-medium text-ccpl-brown uppercase tracking-wide mb-1">Séance</label>
                     <select name="council_id" x-model="selectedCouncil"
-                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-ccpl-blue focus:ring-ccpl-blue text-sm">
                         <option value="">Toutes les séances</option>
                         @foreach ($councils as $council)
                             <option value="{{ $council->id }}" @selected($councilId == $council->id)>
@@ -80,9 +80,9 @@
 
                 {{-- Filtre par document --}}
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Document</label>
+                    <label class="block text-xs font-medium text-ccpl-brown uppercase tracking-wide mb-1">Document</label>
                     <select name="document_id"
-                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-ccpl-blue focus:ring-ccpl-blue text-sm">
                         <option value="">Tous les documents</option>
                         <template x-for="doc in allDocs.filter(d => selectedCouncil === '' || String(d.council_id) === String(selectedCouncil))" :key="doc.id">
                             <option :value="doc.id" :selected="doc.id == {{ $documentId ?? 'null' }}" x-text="doc.title"></option>

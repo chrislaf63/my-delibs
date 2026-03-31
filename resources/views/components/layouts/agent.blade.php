@@ -20,16 +20,16 @@
         <div class="px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex items-center justify-between h-full">
                 <a href="{{ route('agent.explorer') }}"
-                   class="flex items-center gap-2 text-indigo-700 hover:text-indigo-900 transition">
+                   class="flex items-center gap-2 text-ccpl-blue opacity-85 hover:opacity-100 transition">
                     <img alt="logo ccpl" src="{{ asset('images/logo_ccpl.png') }}" class="h-8 w-auto">
                     <span class="text-sm font-semibold hidden sm:inline">Espace agents</span>
                 </a>
                 <div class="flex items-center gap-4 text-sm font-medium">
-                    <span class="text-indigo-700 font-semibold">
+                    <span class="text-ccpl-blue font-semibold">
                         Explorateur
                     </span>
                     <a href="{{ route('public.council.index') }}"
-                       class="text-gray-500 hover:text-indigo-700 transition flex items-center gap-1">
+                       class="text-gray-500 hover:text-ccpl-blue opacity-85 transition flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M10 19l-7-7m0 0l7-7m-7 7h18"/>

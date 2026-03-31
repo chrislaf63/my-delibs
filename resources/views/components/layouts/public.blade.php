@@ -25,11 +25,11 @@
                 </a>
                 <div class="flex items-center gap-6 text-sm font-medium">
                     <a href="{{ route('public.council.index') }}"
-                       class="text-gray-600 hover:text-indigo-700 transition {{ request()->routeIs('public.council.index') ? 'text-indigo-700 font-semibold' : '' }}">
+                       class="{{ request()->routeIs('public.council.index') ? 'text-ccpl-blue font-semibold' : 'text-ccpl-brown hover:text-ccpl-blue transition-colors duration-300' }}">
                         Séances
                     </a>
                     <a href="{{ route('search.index') }}"
-                       class="text-gray-600 hover:text-indigo-700 transition {{ request()->routeIs('search.index') ? 'text-indigo-700 font-semibold' : '' }}">
+                       class="{{ request()->routeIs('search.index') ? 'text-ccpl-blue font-semibold' : 'text-ccpl-brown hover:text-ccpl-blue transition-colors duration-300' }}">
                         Recherche
                     </a>
                 </div>
@@ -50,8 +50,8 @@
     </main>
 
     <footer class="mt-16 border-t border-gray-200 bg-white">
-        <div class="max-w-5xl mx-auto py-6 px-4 text-center text-sm text-gray-400">
-            &copy; {{ date('Y') }} {{ config('app.name', 'My Délibs') }}
+        <div class="max-w-5xl mx-auto py-6 px-4 text-center text-sm text-ccpl-brown">
+            &copy; {{ date('Y') }} {{ config('app.name', 'My Délibs') . ' Communauté de Communes Plaine Limagne' }}
         </div>
     </footer>
 

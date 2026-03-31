@@ -23,7 +23,7 @@
     {{-- EXPLORER (70%) --}}
     <aside style="width: 70%;" class="shrink-0 bg-white border-r border-gray-200 overflow-y-auto flex flex-col">
         <div class="p-3 border-b border-gray-100">
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Documents</p>
+            <p class="text-xs font-semibold text-ccpl-brown uppercase tracking-wider">Documents</p>
         </div>
         <div class="flex-1 py-2">
             @foreach ($tree as $type => $group)
@@ -116,7 +116,7 @@
                     <h1 class="text-sm font-semibold text-gray-900 leading-snug mb-3" x-text="currentDoc.title"></h1>
                     <div class="flex gap-2">
                         <a :href="currentDoc.view_url" target="_blank"
-                           class="flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 transition">
+                           class="flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-ccpl-blue opacity-80 text-white text-xs font-medium hover:opacity-100 transition">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
