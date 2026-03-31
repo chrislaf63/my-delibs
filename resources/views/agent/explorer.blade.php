@@ -21,7 +21,7 @@
     class="flex h-full"
 >
     {{-- EXPLORER (70%) --}}
-    <aside style="width: 70%;" class="shrink-0 bg-white border-r border-gray-200 overflow-y-auto flex flex-col">
+    <aside style="width: 70%;" class="shrink-0 pl-20 bg-white border-r border-gray-200 overflow-y-auto flex flex-col">
         <div class="p-3 border-b border-gray-100">
             <p class="text-xs font-semibold text-ccpl-brown uppercase tracking-wider">Documents</p>
         </div>
