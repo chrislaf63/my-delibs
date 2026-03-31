@@ -1,4 +1,4 @@
-<x-layouts.public>
+<x-layouts.public title="Recherche">
     <x-slot name="header">
         <h1 class="text-2xl font-bold text-gray-800">Recherche de documents</h1>
     </x-slot>

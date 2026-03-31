@@ -7,7 +7,7 @@
         <div class="bg-white p-6 shadow rounded">
             <h2 class="text-lg font-semibold mb-4">Créer une séance</h2>
 
-            <form method="POST" action="{{ route('admin.dashboard.councils.store') }}">
+            <form method="POST" action="{{ route('admin.councils.store') }}">
                 @csrf
 
                 <input type="date" name="council_date"
