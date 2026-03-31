@@ -8,7 +8,7 @@
     @else
         <div class="space-y-3">
             @foreach ($councilsByYear as $year => $councils)
-                <details class="bg-white rounded-xl shadow-sm overflow-hidden group" open>
+                <details class="bg-white rounded-xl shadow-sm overflow-hidden group">
                     <summary class="flex items-center justify-between px-6 py-4 cursor-pointer list-none select-none hover:bg-gray-50 transition">
                         <span class="text-lg font-bold text-gray-800">{{ $year }}</span>
                         <span class="text-sm text-ccpl-brown">

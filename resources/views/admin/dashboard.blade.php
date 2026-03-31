@@ -26,7 +26,7 @@
                     <p class="font-medium text-sm truncate">{{ $doc->title }}</p>
                     <p class="text-xs text-gray-500">
                         Séance du {{ $doc->council->council_date->format('d/m/Y') }}
-                        &bull; {{ $doc->type === 'deliberation' ? 'Délibération' : 'Procès-verbal' }}
+                        &bull; {{ match($doc->type) { 'deliberation' => 'Délibération', 'proces_verbal' => 'Procès-verbal', default => 'Annexe' } }}
                         &bull; indexé le {{ $doc->indexed_at->format('d/m/Y') }}
                         @if($doc->uploader)
                             &bull; par {{ trim($doc->uploader->first_name . ' ' . $doc->uploader->name) }}
