@@ -15,6 +15,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                petita: ['Petita', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 ccpl: {
