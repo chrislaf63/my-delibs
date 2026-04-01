@@ -14,9 +14,6 @@ echo "Correction des permissions..."
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-echo "Installation des dépendances Composer..."
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-
 echo "Découverte des packages Laravel..."
 php artisan package:discover --ansi
 

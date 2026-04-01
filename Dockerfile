@@ -39,8 +39,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # ─── Code de l'application ─────────────────────────────────────────────────────
 WORKDIR /var/www/html
 
+# On copie d'abord uniquement les fichiers de dépendances
+# pour profiter du cache Docker
+COPY composer.json composer.lock ./
+
+# Composer install au build : plus stable, résultat mis en cache
+RUN composer install --no-interaction --prefer-dist --no-scripts --no-autoloader
+
 # Puis on copie tout le reste du projet
 COPY . .
+
+# Génération de l'autoloader
+RUN composer dump-autoload --optimize --no-scripts
 
 # Entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

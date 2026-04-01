@@ -13,9 +13,6 @@ echo "Correction des permissions..."
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-echo "Installation des dépendances Composer..."
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-
 echo "Découverte des packages Laravel..."
 php artisan package:discover --ansi
 
@@ -27,6 +24,13 @@ npm install
 
 echo "Compilation des assets..."
 npm run build
+
+echo "⏳ Attente de la base de données..."
+until php artisan db:monitor --databases=mysql > /dev/null 2>&1; do
+    echo "Base de données non disponible, nouvelle tentative dans 3s..."
+    sleep 3
+done
+echo "Base de données disponible !"
 
 echo "Exécution des migrations..."
 php artisan migrate --force

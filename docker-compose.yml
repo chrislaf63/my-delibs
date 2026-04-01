@@ -20,6 +20,7 @@ services:
             dockerfile: Dockerfile
         volumes:
             - .:/var/www/html
+            - vendor_data:/var/www/html/vendor
             - storage_data:/var/www/html/storage
         environment:
             APP_ENV: local
@@ -43,6 +44,7 @@ services:
         restart: on-failure
         volumes:
             - .:/var/www/html
+            - vendor_data:/var/www/html/vendor
             - storage_data:/var/www/html/storage
         environment:
             APP_ENV: local
@@ -79,3 +81,4 @@ services:
 volumes:
     mysql_data:
     storage_data:
+    vendor_data:
