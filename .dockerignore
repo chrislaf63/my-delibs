@@ -20,7 +20,7 @@
 # Docker lui-même (pas besoin dans l'image)
 Dockerfile
 docker-compose.yml
-docker/
+docker/nginx
 
 # IDE
 .idea/
