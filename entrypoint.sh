@@ -32,8 +32,10 @@ php artisan migrate --force
 echo "Exécution des seeders..."
 php artisan db:seed --force || true
 
-echo "Mise en cache de la configuration..."
-php artisan config:cache || true
+echo "Optimisation pour la production..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 echo "Démarrage de PHP-FPM..."
 exec php-fpm
