@@ -19,12 +19,6 @@ php artisan package:discover --ansi
 echo "Création du lien symbolique storage..."
 php artisan storage:link || true
 
-echo "Installation des dépendances npm..."
-npm install
-
-echo "Compilation des assets..."
-npm run build
-
 echo "⏳ Attente de la base de données..."
 until php artisan db:monitor --databases=mysql > /dev/null 2>&1; do
     echo "Base de données non disponible, nouvelle tentative dans 3s..."

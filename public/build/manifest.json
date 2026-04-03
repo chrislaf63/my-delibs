@@ -1,0 +1,25 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-Cx9cYvVX.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/fonts/PetitaBold.woff2": {
+    "file": "assets/PetitaBold-C3usUWjY.woff2",
+    "src": "resources/fonts/PetitaBold.woff2"
+  },
+  "resources/fonts/PetitaLight.woff2": {
+    "file": "assets/PetitaLight-BTLoME4S.woff2",
+    "src": "resources/fonts/PetitaLight.woff2"
+  },
+  "resources/fonts/PetitaMedium.woff2": {
+    "file": "assets/PetitaMedium-BLMsGgus.woff2",
+    "src": "resources/fonts/PetitaMedium.woff2"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CKl8NZMC.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
