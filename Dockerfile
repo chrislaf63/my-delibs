@@ -30,6 +30,9 @@ RUN docker-php-ext-install \
 		opcache \
         intl
 
+# ─── Configuration PHP personnalisée ───────────────────────────────────────────
+COPY docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
+
 # ─── Composer ──────────────────────────────────────────────────────────────────
 # On copie Composer depuis son image officielle plutôt que de l'installer manuellement
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
