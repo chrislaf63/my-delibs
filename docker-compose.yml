@@ -18,6 +18,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        restart: always
         volumes:
             - .:/var/www/html
             - vendor_data:/var/www/html/vendor
@@ -41,7 +42,7 @@ services:
             context: .
             dockerfile: Dockerfile
         entrypoint: ["/usr/local/bin/entrypoint-queue.sh"]
-        restart: on-failure
+        restart: always
         volumes:
             - .:/var/www/html
             - vendor_data:/var/www/html/vendor
@@ -62,6 +63,7 @@ services:
 
     db:
         image: mysql:8.0
+        restart: always
         environment:
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
             MYSQL_DATABASE: ${DB_DATABASE}
