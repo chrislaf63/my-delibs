@@ -124,9 +124,16 @@
                                 <p class="text-sm text-gray-500 mt-0.5">
                                     Séance du {{ $doc->council->council_date->translatedFormat('d F Y') }}
                                     &bull;
-                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
-                                        {{ $doc->type === 'deliberation' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700' }}">
-                                        {{ $doc->type === 'deliberation' ? 'Délibération' : 'Procès-verbal' }}
+                                    @php
+                                        $badge = match($doc->type) {
+                                            'deliberation'  => ['classes' => 'bg-blue-100 text-blue-700',    'label' => 'Délibération'],
+                                            'proces_verbal' => ['classes' => 'bg-green-100 text-green-700',  'label' => 'Procès-verbal'],
+                                            'annexe'        => ['classes' => 'bg-purple-100 text-purple-700','label' => 'Annexe'],
+                                            default         => ['classes' => 'bg-gray-100 text-gray-700',    'label' => $doc->type],
+                                        };
+                                    @endphp
+                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $badge['classes'] }}">
+                                        {{ $badge['label'] }}
                                     </span>
                                 </p>
 
