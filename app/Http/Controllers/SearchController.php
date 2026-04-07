@@ -31,7 +31,7 @@ class SearchController extends Controller
     {
         $request->validate([
             'q'           => 'nullable|string|max:255',
-            'type'        => 'nullable|in:deliberation,proces_verbal',
+            'type'        => 'nullable|in:deliberation,proces_verbal,annexe',
             'date_from'   => 'nullable|date',
             'date_to'     => 'nullable|date',
             'council_id'  => 'nullable|integer|exists:councils,id',

@@ -20,6 +20,7 @@
                 <option value="">Tous les types</option>
                 <option value="deliberation" @selected($type === 'deliberation')>Délibérations</option>
                 <option value="proces_verbal" @selected($type === 'proces_verbal')>Procès-verbaux</option>
+                <option value="annexe" @selected($type === 'annexe')>Annexes</option>
             </select>
 
             <button type="submit"
