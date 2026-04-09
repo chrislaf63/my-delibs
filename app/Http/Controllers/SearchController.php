@@ -48,36 +48,34 @@ class SearchController extends Controller
         $hasFilters = (bool) ($q || $type || $dateFrom || $dateTo || $councilId || $documentId);
 
         $documents = Document::query()
-            ->where('status', 'indexed')
+            ->select('documents.*')
+            ->join('councils', 'councils.id', '=', 'documents.council_id')
+            ->where('documents.status', 'indexed')
             ->when($type, fn ($query) => $query->where(function ($q) use ($type) {
-                $q->where('type', $type)
+                $q->where('documents.type', $type)
                     ->orWhere(function ($q2) use ($type) {
-                        $q2->where('type', 'annexe')
+                        $q2->where('documents.type', 'annexe')
                             ->whereHas('parent', fn ($p) => $p->where('type', $type));
                     });
             }))
-            ->when($documentId, fn ($query) => $query->where('id', $documentId))
-            ->when($councilId, fn ($query) => $query->where('council_id', $councilId))
-            ->when($dateFrom, fn ($query) =>
-                $query->whereHas('council', fn ($q2) => $q2->where('council_date', '>=', $dateFrom))
-            )
-            ->when($dateTo, fn ($query) =>
-                $query->whereHas('council', fn ($q2) => $q2->where('council_date', '<=', $dateTo))
-            )
+            ->when($documentId, fn ($query) => $query->where('documents.id', $documentId))
+            ->when($councilId, fn ($query) => $query->where('documents.council_id', $councilId))
+            ->when($dateFrom, fn ($query) => $query->where('councils.council_date', '>=', $dateFrom))
+            ->when($dateTo, fn ($query) => $query->where('councils.council_date', '<=', $dateTo))
             ->when($q, function ($query) use ($q) {
                 if (DB::getDriverName() === 'sqlite') {
                     $query->where(function ($q2) use ($q) {
-                        $q2->where('title', 'LIKE', "%{$q}%")
-                            ->orWhere('content', 'LIKE', "%{$q}%");
+                        $q2->where('documents.title', 'LIKE', "%{$q}%")
+                            ->orWhere('documents.content', 'LIKE', "%{$q}%");
                     });
                 } else {
                     $phrase = str_contains($q, ' ') ? '"' . $q . '"' : $q;
-                    $query->whereRaw("MATCH(title, content) AGAINST(? IN BOOLEAN MODE)", [$phrase])
-                        ->selectRaw("documents.*, MATCH(title, content) AGAINST(?) AS relevance", [$phrase])
+                    $query->whereRaw("MATCH(documents.title, documents.content) AGAINST(? IN BOOLEAN MODE)", [$phrase])
+                        ->selectRaw("documents.*, MATCH(documents.title, documents.content) AGAINST(?) AS relevance", [$phrase])
                         ->orderByDesc('relevance');
                 }
             })
-            ->when(! $q, fn ($query) => $query->orderByDesc('created_at'))
+            ->orderByDesc('councils.council_date')
             ->with('council')
             ->paginate(15)
             ->withQueryString();
