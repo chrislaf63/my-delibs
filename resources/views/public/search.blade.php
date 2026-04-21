@@ -7,6 +7,7 @@
     <form method="GET" action="{{ route('search.index') }}"
           class="bg-white rounded-xl shadow-sm p-5 mb-8 flex flex-col gap-3">
 
+
         {{-- Barre principale --}}
         <div class="flex flex-col sm:flex-row gap-3">
             <input type="text"

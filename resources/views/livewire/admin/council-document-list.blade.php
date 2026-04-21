@@ -16,8 +16,8 @@
                 @endphp
                 <li>
                     <div class="flex items-center justify-between px-4 py-3 {{ $rowClass }}">
-                        <div>
-                            <p class="text-sm font-medium">{{ $document->title }}</p>
+                        <div class="min-w-0 flex-1 pr-4">
+                            <p class="text-sm font-medium truncate">{{ $document->title }}</p>
                             <p class="text-xs text-gray-500">
                                 {{ match($document->type) {
                                     'deliberation'  => 'Délibération',
@@ -47,7 +47,7 @@
                             </p>
                         </div>
 
-                        <div class="flex items-center gap-3">
+                        <div class="shrink-0 flex items-center gap-3">
                             @if($document->status === 'indexed')
                                 <a href="{{ route('public.documents.view', $document) }}"
                                    target="_blank"
@@ -104,8 +104,8 @@
                                         };
                                     @endphp
                                     <li class="flex items-center justify-between pl-8 pr-4 py-2 {{ $annexeRowClass }}">
-                                        <div>
-                                            <p class="text-sm text-gray-700">{{ $annexe->title }}</p>
+                                        <div class="min-w-0 flex-1 pr-4">
+                                            <p class="text-sm text-gray-700 truncate">{{ $annexe->title }}</p>
                                             <p class="text-xs text-gray-400">
                                                 @switch($annexe->status)
                                                     @case('indexed')    <span
@@ -120,7 +120,7 @@
                                                     @endif
                                             </p>
                                         </div>
-                                        <div class="flex items-center gap-3">
+                                        <div class="shrink-0 flex items-center gap-3">
                                             @if($annexe->status === 'indexed')
                                                 <a href="{{ route('public.documents.view', $annexe) }}" target="_blank"
                                                    class="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline">
