@@ -38,8 +38,8 @@
                                         @foreach ($council->documents as $document)
                                             <li>
                                                 <div class="flex items-center justify-between px-8 py-3">
-                                                    <div>
-                                                        <p class="text-sm font-medium text-gray-800">{{ $document->title }}</p>
+                                                    <div class="min-w-0 flex-1 pr-4">
+                                                        <p class="text-sm font-medium text-gray-800 truncate" title="{{ $document->title }}">{{ $document->title }}</p>
                                                         <p class="text-xs text-ccpl-brown">
                                                             {{ match($document->type) {
                                                                 'deliberation' => 'Délibération',
@@ -79,7 +79,7 @@
                                                         <ul class="divide-y divide-gray-100 bg-white">
                                                             @foreach ($document->annexes as $annexe)
                                                                 <li class="flex items-center justify-between pl-12 pr-8 py-3 gap-4 hover:bg-gray-50 transition">
-                                                                    <span class="text-sm text-gray-600">{{ $annexe->title }}</span>
+                                                                    <span class="text-sm text-gray-600 min-w-0 flex-1 truncate pr-4" title="{{ $annexe->title }}">{{ $annexe->title }}</span>
                                                                     <div class="shrink-0 flex items-center gap-3">
                                                                         <a href="{{ route('public.documents.view', $annexe) }}" target="_blank"
                                                                            class="inline-flex items-center gap-1 text-xs text-ccpl-blue hover:underline">
